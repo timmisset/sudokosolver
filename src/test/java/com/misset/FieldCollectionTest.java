@@ -1,6 +1,9 @@
 package com.misset;
 
-public class FieldCollectionTest {
+import com.misset.field.Field;
+import com.misset.field.FieldCollection;
+
+public abstract class FieldCollectionTest {
 
     protected FieldCollection fields = getFields();
 

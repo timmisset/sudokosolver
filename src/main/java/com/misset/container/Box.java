@@ -1,6 +1,6 @@
 package com.misset.container;
 
-import com.misset.FieldCollection;
+import com.misset.field.FieldCollection;
 
 import java.util.ArrayList;
 import java.util.List;

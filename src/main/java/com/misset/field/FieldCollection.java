@@ -1,4 +1,4 @@
-package com.misset;
+package com.misset.field;
 
 import org.apache.commons.lang3.Range;
 

@@ -1,7 +1,7 @@
 package com.misset.container;
 
-import com.misset.Field;
-import com.misset.FieldCollection;
+import com.misset.field.Field;
+import com.misset.field.FieldCollection;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

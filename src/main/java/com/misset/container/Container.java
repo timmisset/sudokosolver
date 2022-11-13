@@ -1,7 +1,7 @@
 package com.misset.container;
 
-import com.misset.Field;
-import com.misset.FieldCollection;
+import com.misset.field.Field;
+import com.misset.field.FieldCollection;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +32,7 @@ public abstract class Container {
         for(int i = 1 ; i <= 9 ; i++) {
             Collection<Field> fieldsWithValue = getFieldsWithValue(i);
             if(fieldsWithValue.size() != 1) {
-                throw new RuntimeException("Value " + i + " was present " + fieldsWithValue.size() + " times in container " + fields);
+                throw new ValidationException(fields, i, fieldsWithValue.size());
             }
         }
     }

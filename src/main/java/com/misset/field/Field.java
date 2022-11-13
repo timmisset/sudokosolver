@@ -1,4 +1,4 @@
-package com.misset;
+package com.misset.field;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +28,7 @@ public class Field {
         if (isSolved()) {
             return validOptions.get(0);
         } else {
-            throw new RuntimeException("Field is not yet solved");
+            throw new FieldIsNotSolvedException(this);
         }
     }
 

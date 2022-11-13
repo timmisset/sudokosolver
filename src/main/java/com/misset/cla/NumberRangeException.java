@@ -1,4 +1,4 @@
 package com.misset.cla;
 
-public class NumberRangeException extends Throwable {
+public class NumberRangeException extends RuntimeException {
 }
