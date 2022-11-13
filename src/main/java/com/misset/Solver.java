@@ -47,11 +47,15 @@ public class Solver {
     }
 
     private void solveContainer(Container container) {
-        solveIfOnlyOneFieldIsApplicableForValue(container);
+        setValueIfOnlyOneFieldIsApplicableForValue(container);
         excludeFromFieldIfSolvedBySibling(container);
     }
 
-    private void solveIfOnlyOneFieldIsApplicableForValue(Container container) {
+    /*
+        If only 1 field in a Container can contain a value, based on the exclusion of other values,
+        that field can be set.
+     */
+    private void setValueIfOnlyOneFieldIsApplicableForValue(Container container) {
         for (int i = 1; i <= 9; i++) {
             int finalI = i;
             if (!container.hasSolved(finalI)) {
@@ -64,21 +68,9 @@ public class Solver {
         }
     }
 
-    private void excludeOtherFields(Container container, Field solvedField, Integer solution) {
-        if (container.getFields().contains(solvedField)) {
-            container.getFields().stream().filter(field -> field != solvedField && !field.isSolved()).forEach(field -> {
-                field.exclude(solution);
-                if (field.isSolved()) {
-                    excludeOtherFields(container, field, field.getValue());
-                }
-            });
-        }
-    }
-
-    public boolean isSolved() {
-        return fields.stream().allMatch(Field::isSolved);
-    }
-
+    /*
+     * If a field within a Container is solved, all other fields cannot contain that value
+     */
     private void excludeFromFieldIfSolvedBySibling(Container container) {
         for (Field field : container.getFields()) {
             if (!field.isSolved()) {
@@ -88,6 +80,24 @@ public class Solver {
         }
     }
 
+    public boolean isSolved() {
+        return fields.stream().allMatch(Field::isSolved);
+    }
+
+    /*
+        Solve by partial exclusion will check if a BoxLineIntersect is the only
+        optional for a value, based on the possibilities of its sibling intersects.
+
+        For example, a line contains 3 BoxLineIntersects. If the second and third cannot
+        contain a specific value, we know for sure that the value must be present on the first
+        BoxLineIntersect. Even if we don't yet know where it should be placed, we can remove
+        it from the possible options of the BoxLineIntersects in the same Box
+
+            V-- 3 intersects sharing a box
+        [ . . . | . . . | . . . ] <-- 3 intersects sharing a line
+        [ . . . |
+        [ . . . |
+     */
     private void solveByPartialExclusion() {
         for (BoxLineIntersect boxLineIntersect : boxLineIntersects) {
             for (int i = 1; i <= 9; i++) {
@@ -135,8 +145,15 @@ public class Solver {
         containers.forEach(container -> excludeOtherFields(container, field, value));
     }
 
-    private Field getField(int col, int row) {
-        return fields.stream().filter(field -> field.getxPos() == col && field.getyPos() == row).findFirst().orElse(null);
+    private void excludeOtherFields(Container container, Field solvedField, Integer solution) {
+        if (container.getFields().contains(solvedField)) {
+            container.getFields().stream().filter(field -> field != solvedField && !field.isSolved()).forEach(field -> {
+                field.exclude(solution);
+                if (field.isSolved()) {
+                    excludeOtherFields(container, field, field.getValue());
+                }
+            });
+        }
     }
 
     public String getResults() {
@@ -152,6 +169,10 @@ public class Solver {
         }
         stringBuilder.append(System.lineSeparator());
         return stringBuilder.toString();
+    }
+
+    private Field getField(int col, int row) {
+        return fields.stream().filter(field -> field.getxPos() == col && field.getyPos() == row).findFirst().orElse(null);
     }
 
     public FieldCollection getFields() {
